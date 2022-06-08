@@ -4,7 +4,8 @@ import { isNumber } from "lodash";
 import LeafCarouselOperate from "../leaf-carousel-operate/index.vue";
 
 type LeafCarouselPropsType = "common" | "fade";
-type LeafCarouselPropsPosition = "top" | "left" | "right" | "bottom";
+type LeafCarouselPropsOperatePosition = "center" | "left" | "right";
+type LeafCarouselPropsOperateType = 'line' | 'round'
 
 interface LeafCarouselProps {
   imgList: Array<string>;
@@ -12,7 +13,9 @@ interface LeafCarouselProps {
   duration?: number | string;
   width: number | string;
   height: number | string;
-  position?: LeafCarouselPropsPosition;
+  operate_position?: LeafCarouselPropsOperatePosition;
+  operate_color?: string;
+  operate_type?:LeafCarouselPropsOperateType;
 }
 const {
   imgList,
@@ -20,7 +23,9 @@ const {
   duration = 3000,
   width,
   height,
-  position = "bottom",
+  operate_position = "center",
+  operate_color='currentColor',
+  operate_type='round',
 } = defineProps<LeafCarouselProps>();
 let timer: Ref<any> = ref(null);
 let currentActiveIndex: Ref<number> = ref(1);
@@ -33,9 +38,17 @@ onBeforeUnmount(() => {
   timerIntervalClear();
 });
 
-const carouselStyle = computed(() => ({
+const carouselWrapperStyle = computed(() => ({
   width: isNumber(width) ? `${width}px` : width,
   height: isNumber(height) ? `${height}px` : height,
+}));
+
+const carouselOperateProps = computed(() => ({
+  position: operate_position,
+  color: operate_color,
+  type:operate_type,
+  currentActiveIndex: currentActiveIndex.value,
+  allIndex: Number(imgList.length),
 }));
 
 function handleClickOperate(index: number) {
@@ -44,6 +57,7 @@ function handleClickOperate(index: number) {
   timerIntervalClear();
   timerIntervalChange();
 }
+
 function timerIntervalChange() {
   timer.value = setInterval(() => {
     if (currentActiveIndex.value <= Number(imgList.length) - 1) {
@@ -60,11 +74,13 @@ function timerIntervalClear() {
 </script>
 
 <template>
-  <div class="leaf-carousel-wrapper" :style="carouselStyle">
+  <div class="leaf-carousel-wrapper" :style="carouselWrapperStyle">
     <LeafCarouselOperate
-      :all-index="Number(imgList.length)"
-      :current-active-index="currentActiveIndex"
-      :position="position"
+      :all-index="carouselOperateProps.allIndex"
+      :current-active-index="carouselOperateProps.currentActiveIndex"
+      :position="carouselOperateProps.position"
+      :color="carouselOperateProps.color"
+      :type="carouselOperateProps.type"
       @change="handleClickOperate"
     ></LeafCarouselOperate>
   </div>
