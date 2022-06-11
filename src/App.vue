@@ -7,7 +7,7 @@ import LeafCarousel from "./components/leaf-carousel/index.vue";
     :img-list="['', '', '', '', '']"
     :width="600"
     :height="300"
-    operate_position="right"
+    operate_position="left"
   />
   <ul>
     <li>更新日志</li>

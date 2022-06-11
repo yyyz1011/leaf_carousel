@@ -21,11 +21,11 @@ const carouselOperateWrapperStyle = computed(() => {
       break;
     case "left":
       operateStyle.bottom = "5%";
-      operateStyle.left = "5%";
+      operateStyle.left = "2%";
       break;
     case "right":
       operateStyle.bottom = "5%";
-      operateStyle.right = "5%";
+      operateStyle.right = "2%";
       break;
   }
   return operateStyle;
